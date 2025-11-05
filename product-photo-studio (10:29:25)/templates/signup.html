@@ -429,7 +429,7 @@
 
     <div class="signup-card">
 
-    <!-- Step 1: Email & Password -->
+    <!-- Step 1: Name & Email -->
     <div class="form-step active" data-step="1">
       <div class="form-header">
         <h1 class="form-title">Create your account</h1>
@@ -439,11 +439,23 @@
       <form id="step1-form">
         <div class="form-content">
           <div class="form-group">
+            <label for="name" class="form-label">Name</label>
+            <input
+              type="text"
+              id="name"
+              class="form-input"
+              placeholder="Your name"
+              autocomplete="name"
+            />
+            <div class="error-message" id="name-error">Please enter your name</div>
+          </div>
+
+          <div class="form-group">
             <label for="email" class="form-label">Email</label>
-            <input 
-              type="email" 
-              id="email" 
-              class="form-input" 
+            <input
+              type="email"
+              id="email"
+              class="form-input"
               placeholder="you@example.com"
               required
               autocomplete="email"
@@ -453,10 +465,10 @@
 
           <div class="form-group">
             <label for="password" class="form-label">Password</label>
-            <input 
-              type="password" 
-              id="password" 
-              class="form-input" 
+            <input
+              type="password"
+              id="password"
+              class="form-input"
               placeholder="At least 8 characters"
               required
               autocomplete="new-password"
@@ -513,6 +525,8 @@
             <button type="submit" class="submit-button">Start 7-day free trial</button>
           </div>
         </div>
+
+        <a class="skip-link" id="skip-to-free">Continue with free account</a>
       </form>
     </div>
 
@@ -524,7 +538,7 @@
           <div class="loading-dot"></div>
           <div class="loading-dot"></div>
         </div>
-        <div class="loading-text">Creating your account...</div>
+        <div class="loading-text">Please wait while we create your account</div>
       </div>
     </div>
   </div>
@@ -536,6 +550,7 @@
     const preselectedBilling = urlParams.get('billing') || 'monthly';
 
     const formData = {
+      name: '',
       email: '',
       password: '',
       plan: preselectedPlan || null
@@ -592,15 +607,19 @@
       document.getElementById(fieldId).classList.remove('error');
     }
 
-    // Step 1: Email & Password
+    // Step 1: Name, Email & Password
     document.getElementById('step1-form').addEventListener('submit', function(e) {
       e.preventDefault();
-      
+
+      const name = document.getElementById('name').value.trim();
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
-      
+
       let isValid = true;
-      
+
+      // Name is optional, but if provided, store it
+      formData.name = name;
+
       if (!email || !validateEmail(email)) {
         showError('email');
         isValid = false;
@@ -608,7 +627,7 @@
         hideError('email');
         formData.email = email;
       }
-      
+
       if (password.length < 8) {
         showError('password');
         isValid = false;
@@ -616,7 +635,7 @@
         hideError('password');
         formData.password = password;
       }
-      
+
       if (isValid) {
         goToStep(2);
       }
@@ -644,6 +663,15 @@
       await createAccount(preselectedBilling);
     });
 
+    // Skip to free account
+    document.getElementById('skip-to-free').addEventListener('click', async function(e) {
+      e.preventDefault();
+      formData.plan = 'free';
+
+      goToStep(3);
+      await createAccount('free');
+    });
+
     // Create account function
     async function createAccount(billing) {
       try {
@@ -653,6 +681,7 @@
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
+            name: formData.name,
             email: formData.email,
             password: formData.password,
             plan: formData.plan,
@@ -682,7 +711,7 @@
     }
 
     // Hide errors on input
-    ['email', 'password'].forEach(fieldId => {
+    ['name', 'email', 'password'].forEach(fieldId => {
       document.getElementById(fieldId).addEventListener('input', function() {
         hideError(fieldId);
       });

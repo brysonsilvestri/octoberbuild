@@ -89,6 +89,7 @@ PRICE_ID_TO_TIER = {
 # --- User Model ---
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(200), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
@@ -129,6 +130,14 @@ class MobileUploadToken(db.Model):
     used = db.Column(db.Boolean, default=False, nullable=False)
     image_path = db.Column(db.String(255), nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
+
+# --- Anonymous generation tracking (IP-based for non-users) ---
+class AnonymousGeneration(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    ip_address = db.Column(db.String(45), nullable=False, index=True)  # Supports IPv4 and IPv6
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    input_image_path = db.Column(db.String(255), nullable=True)
+    output_image_path = db.Column(db.String(255), nullable=True)
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -230,20 +239,21 @@ def privacy():
 def api_signup():
     """AJAX endpoint for creating accounts during signup flow"""
     data = request.get_json()
+    name = (data.get("name") or "").strip()
     email = (data.get("email") or "").strip().lower()
     password = data.get("password") or ""
     plan = data.get("plan", "free").lower()
     billing = data.get("billing", "monthly").lower()
-    
+
     if not email or not password:
         return jsonify({"success": False, "error": "Email and password are required"}), 400
-    
+
     existing = User.query.filter_by(email=email).first()
     if existing:
         return jsonify({"success": False, "error": "Email already registered"}), 400
-    
+
     # Create user account
-    user = User(email=email)
+    user = User(email=email, name=name if name else None)
     user.set_password(password)
     
     # If free plan, set up and return success
@@ -351,6 +361,22 @@ def signup():
     login_user(user)
     next_page = request.args.get('next') or request.form.get('next') or url_for('index')
     return redirect(next_page)
+
+@app.route("/signup_tier")
+def signup_tier():
+    """Dynamic signup page for pricing page 'Get Started' buttons"""
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+
+    plan = request.args.get('plan', 'starter')
+    billing = request.args.get('billing', 'monthly')
+
+    # Validate plan
+    valid_plans = ['starter', 'creator', 'enterprise']
+    if plan not in valid_plans:
+        return redirect(url_for('signup'))
+
+    return render_template("signup_tier.html", plan=plan, billing=billing)
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -659,16 +685,31 @@ def view_generation(generation_id):
 # -----------------------
 @app.post("/transform")
 def transform():
-    if not current_user.is_authenticated:
-        return redirect(url_for('signup', next=url_for('index')))
+    # Get user's IP address
+    user_ip = request.remote_addr or request.environ.get('HTTP_X_REAL_IP', request.environ.get('HTTP_X_FORWARDED_FOR', ''))
 
-    # Check credits
-    if current_user.credits_remaining < CREDITS_PER_IMAGE:
-        if current_user.is_subscribed:
-            flash("You've used all your monthly credits. They'll reset at the start of next month.", "info")
-        else:
-            flash("You've used all your free credits. Upgrade to continue.", "info")
-        return redirect(url_for('upgrade'))
+    # Handle anonymous users (not logged in)
+    if not current_user.is_authenticated:
+        # Check if this IP has already used their free photo
+        existing_anon_gen = AnonymousGeneration.query.filter_by(ip_address=user_ip).first()
+
+        if existing_anon_gen:
+            # IP has already used their free photo - redirect to signup
+            flash("You've already generated your free photo. Create an account to continue!", "info")
+            return redirect(url_for('signup'))
+
+        # Allow anonymous generation (will be tracked below)
+        is_anonymous = True
+    else:
+        is_anonymous = False
+
+        # Check credits for authenticated users
+        if current_user.credits_remaining < CREDITS_PER_IMAGE:
+            if current_user.is_subscribed:
+                flash("You've used all your monthly credits. They'll reset at the start of next month.", "info")
+            else:
+                flash("You've used all your free credits. Upgrade to continue.", "info")
+            return redirect(url_for('upgrade'))
 
     input_image = None
     output_image = None
@@ -722,41 +763,69 @@ def transform():
             generated_image.save(output_path, format="PNG")
             output_image = "/" + output_path.replace("\\", "/")
 
-        generation = Generation(
-            user_id=current_user.id,
-            input_image_path=input_image,
-            output_image_path=output_image,
-        )
-        db.session.add(generation)
-        
-        # Deduct credits
-        current_user.credits_remaining = max(0, current_user.credits_remaining - CREDITS_PER_IMAGE)
-        current_user.generation_count = (current_user.generation_count or 0) + 1
-        db.session.commit()
+        if is_anonymous:
+            # Record anonymous generation with IP
+            anon_generation = AnonymousGeneration(
+                ip_address=user_ip,
+                input_image_path=input_image,
+                output_image_path=output_image,
+            )
+            db.session.add(anon_generation)
+            db.session.commit()
+        else:
+            # Record generation for authenticated user
+            generation = Generation(
+                user_id=current_user.id,
+                input_image_path=input_image,
+                output_image_path=output_image,
+            )
+            db.session.add(generation)
+
+            # Deduct credits
+            current_user.credits_remaining = max(0, current_user.credits_remaining - CREDITS_PER_IMAGE)
+            current_user.generation_count = (current_user.generation_count or 0) + 1
+            db.session.commit()
 
     except Exception as e:
         error = f"Error generating image: {str(e)}"
         flash(error, "error")
 
-    is_authed = True
-    is_subscribed = bool(getattr(current_user, "is_subscribed", False))
-    free_cap = 15
-    used = int(getattr(current_user, "generation_count", 0))
-    free_uses_left = max(0, free_cap - used) if not is_subscribed else None
-    
-    user_generations = current_user.generations
+    if is_anonymous:
+        # Anonymous user - show signup prompt after generation
+        flash("Love your result? Sign up to generate unlimited photos!", "success")
+        return render_template(
+            "index.html",
+            user=None,
+            input_image=input_image,
+            output_image=output_image,
+            error=error,
+            is_authed=False,
+            is_subscribed=False,
+            free_uses_left=0,
+            user_generations=[],
+            show_signup_prompt=True,
+        )
+    else:
+        # Authenticated user
+        is_authed = True
+        is_subscribed = bool(getattr(current_user, "is_subscribed", False))
+        free_cap = 15
+        used = int(getattr(current_user, "generation_count", 0))
+        free_uses_left = max(0, free_cap - used) if not is_subscribed else None
 
-    return render_template(
-        "index.html",
-        user=current_user,
-        input_image=input_image,
-        output_image=output_image,
-        error=error,
-        is_authed=is_authed,
-        is_subscribed=is_subscribed,
-        free_uses_left=free_uses_left,
-        user_generations=user_generations,
-    )
+        user_generations = current_user.generations
+
+        return render_template(
+            "index.html",
+            user=current_user,
+            input_image=input_image,
+            output_image=output_image,
+            error=error,
+            is_authed=is_authed,
+            is_subscribed=is_subscribed,
+            free_uses_left=free_uses_left,
+            user_generations=user_generations,
+        )
 
 # -----------------------
 # Mobile Upload (QR flow)
