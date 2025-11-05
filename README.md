@@ -17,7 +17,7 @@ AI-powered product photography tool with white background removal and studio lig
 
 ```bash
 git clone https://github.com/brysonsilvestri/octoberbuild.git
-cd "product-photo-studio (10:29:25)"
+cd octoberbuild
 ```
 
 ### 2. Create Virtual Environment
@@ -79,7 +79,7 @@ The app will be available at `http://localhost:5000`
 ## Project Structure
 
 ```
-product-photo-studio/
+octoberbuild/
 ├── app.py                 # Main Flask application
 ├── requirements.txt       # Python dependencies
 ├── .env                   # Environment variables (create this)
