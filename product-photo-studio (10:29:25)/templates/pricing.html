@@ -607,7 +607,7 @@
             </div>
             <div class="price-annual-note" id="starter-note">Billed annually at $60</div>
           </div>
-          <a href="{{ url_for('signup', plan='starter', billing='monthly') }}" class="plan-cta" id="starter-cta">Get Started</a>
+          <a href="{{ url_for('signup_tier', plan='starter', billing='monthly') }}" class="plan-cta" id="starter-cta">Get Started</a>
           <ul class="plan-features">
             <li><i class="bi bi-check-circle-fill"></i> 120 images per month</li>
             <li><i class="bi bi-check-circle-fill"></i> White background removal</li>
@@ -633,7 +633,7 @@
             </div>
             <div class="price-annual-note" id="creator-note">Billed annually at $220</div>
           </div>
-          <a href="{{ url_for('signup', plan='creator', billing='monthly') }}" class="plan-cta primary" id="creator-cta">Get Started</a>
+          <a href="{{ url_for('signup_tier', plan='creator', billing='monthly') }}" class="plan-cta primary" id="creator-cta">Get Started</a>
           <ul class="plan-features">
             <li><i class="bi bi-check-circle-fill"></i> 400 images per month</li>
             <li><i class="bi bi-check-circle-fill"></i> White background removal</li>
@@ -658,7 +658,7 @@
             </div>
             <div class="price-annual-note" id="enterprise-note">Billed annually at $990</div>
           </div>
-          <a href="{{ url_for('signup', plan='starter', billing='monthly') }}" class="plan-cta" id="starter-cta">Get Started</a>
+          <a href="{{ url_for('signup_tier', plan='enterprise', billing='monthly') }}" class="plan-cta" id="enterprise-cta">Get Started</a>
           <ul class="plan-features">
             <li><i class="bi bi-check-circle-fill"></i> 1,600 images per month</li>
             <li><i class="bi bi-check-circle-fill"></i> White background removal</li>
@@ -733,10 +733,10 @@
     // Update CTA links when billing toggle changes
     function updateCTALinks() {
       const billing = isAnnual ? 'annual' : 'monthly';
-      
-      document.getElementById('starter-cta').href = `/signup?plan=starter&billing=${billing}`;
-      document.getElementById('creator-cta').href = `/signup?plan=creator&billing=${billing}`;
-      document.getElementById('enterprise-cta').href = `/signup?plan=enterprise&billing=${billing}`;
+
+      document.getElementById('starter-cta').href = `/signup_tier?plan=starter&billing=${billing}`;
+      document.getElementById('creator-cta').href = `/signup_tier?plan=creator&billing=${billing}`;
+      document.getElementById('enterprise-cta').href = `/signup_tier?plan=enterprise&billing=${billing}`;
     }
 
     function toggleBilling() {

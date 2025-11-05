@@ -662,6 +662,35 @@
       gap: 1rem;
     }
 
+    .signup-prompt-banner {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+      animation: slideDown 0.5s ease-out;
+    }
+
+    .signup-prompt-content {
+      color: white;
+      text-align: center;
+    }
+
+    .signup-prompt-content h3 {
+      color: white;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
     .results-buttons {
       display: flex;
       gap: 0.75rem;
@@ -1091,6 +1120,16 @@
       .new-image-btn {
         min-width: 100%;
       }
+      .signup-prompt-banner {
+        padding: 1.25rem;
+        margin-bottom: 1rem;
+      }
+      .signup-prompt-content h3 {
+        font-size: 1.125rem;
+      }
+      .signup-prompt-content p {
+        font-size: 0.9375rem;
+      }
       .thumbnail-img {
         width: 60px;
         height: 60px;
@@ -1298,18 +1337,32 @@
                 {% else %}
                 <!-- Result view -->
                 <div class="results-container">
+                  {% if show_signup_prompt %}
+                  <!-- Signup prompt for anonymous users -->
+                  <div class="signup-prompt-banner">
+                    <div class="signup-prompt-content">
+                      <h3 style="margin: 0 0 0.5rem 0; font-size: 1.25rem; font-weight: 700;">Love your result? ✨</h3>
+                      <p style="margin: 0 0 1rem 0; color: #666;">Create a free account to generate unlimited photos!</p>
+                      <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                        <a href="{{ url_for('signup') }}" class="btn btn-primary" style="flex: 1; min-width: 140px;">Sign Up Free</a>
+                        <a href="{{ url_for('pricing') }}" class="btn btn-outline-primary" style="flex: 1; min-width: 140px;">View Plans</a>
+                      </div>
+                    </div>
+                  </div>
+                  {% endif %}
+
                   <div class="results-image-wrapper">
                     <img src="{{ output_image }}" alt="AI Generated Image" class="output-img" />
-                    
+
                     {% if input_image %}
-                      <img src="{{ input_image }}" 
-                          alt="Uploaded Image Thumbnail" 
-                          class="thumbnail-img" 
+                      <img src="{{ input_image }}"
+                          alt="Uploaded Image Thumbnail"
+                          class="thumbnail-img"
                           id="thumbnailImg"
                           title="Click to compare" />
                     {% endif %}
                   </div>
-                  
+
                   <div class="results-buttons">
                     {% if output_image %}
                       <a class="download-btn" href="{{ output_image }}" download>Download</a>

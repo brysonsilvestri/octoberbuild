@@ -411,11 +411,22 @@
         <input type="hidden" id="billing" value="{{ billing }}">
 
         <div class="form-group">
+          <label for="name" class="form-label">Name</label>
+          <input
+            type="text"
+            id="name"
+            class="form-input"
+            placeholder="Your name"
+            autocomplete="name"
+          >
+        </div>
+
+        <div class="form-group">
           <label for="email" class="form-label">Email</label>
-          <input 
-            type="email" 
-            id="email" 
-            class="form-input" 
+          <input
+            type="email"
+            id="email"
+            class="form-input"
             placeholder="you@example.com"
             required
             autocomplete="email"
@@ -424,10 +435,10 @@
 
         <div class="form-group">
           <label for="password" class="form-label">Password</label>
-          <input 
-            type="password" 
-            id="password" 
-            class="form-input" 
+          <input
+            type="password"
+            id="password"
+            class="form-input"
             placeholder="At least 8 characters"
             required
             autocomplete="new-password"
@@ -460,34 +471,37 @@
     const plan = document.getElementById('plan').value;
     const billing = document.getElementById('billing').value;
 
+    const nameInput = document.getElementById('name');
+
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      
+
+      const name = nameInput.value.trim();
       const email = emailInput.value.trim();
       const password = passwordInput.value;
-      
+
       emailInput.classList.remove('error');
       passwordInput.classList.remove('error');
       errorMessage.classList.remove('show');
       errorMessage.textContent = '';
-      
+
       if (!email || !email.includes('@')) {
         emailInput.classList.add('error');
         errorMessage.textContent = 'Please enter a valid email address';
         errorMessage.classList.add('show');
         return;
       }
-      
+
       if (password.length < 8) {
         passwordInput.classList.add('error');
         errorMessage.textContent = 'Password must be at least 8 characters';
         errorMessage.classList.add('show');
         return;
       }
-      
+
       submitBtn.disabled = true;
       submitBtn.classList.add('loading');
-      
+
       try {
         const response = await fetch('/api/signup', {
           method: 'POST',
@@ -495,6 +509,7 @@
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
+            name: name,
             email: email,
             password: password,
             plan: plan,
