@@ -8,9 +8,9 @@
   <style>
     :root {
       --bg-light: #f7f7fb;
-      --text-light: #000;
-      --text-muted: #666;
-      --chatgpt-blue: #0a7cff;
+      --text-dark: #2d3748;
+      --text-muted: #718096;
+      --primary-blue: #0a7cff;
     }
 
     * {
@@ -22,99 +22,68 @@
       padding: 2rem 1rem;
       font-family: 'Inter', sans-serif;
       background-color: var(--bg-light);
-      color: var(--text-light);
+      color: var(--text-dark);
       min-height: 100vh;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      font-size: 0.9375rem;
-      line-height: 1.5;
     }
 
-    /* Main Container */
     .signup-container {
       width: 100%;
-      max-width: 520px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      max-width: 480px;
     }
 
-    /* Logo above card */
     .site-logo {
       font-size: 1.5rem;
       font-weight: 600;
       color: #333;
       letter-spacing: -0.02em;
       text-decoration: none;
-      margin-bottom: 2rem;
+      display: block;
       text-align: center;
+      margin-bottom: 2rem;
     }
 
-    /* Main Card */
-    .signup-card {
-      background: white;
-      border-radius: 1rem;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
-      max-width: 520px;
-      width: 100%;
-      padding: 2.5rem 2rem;
-      animation: fadeUp 0.6s ease-out;
-    }
-
-    @keyframes fadeUp {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(10px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    /* Progress Bar (outside card) */
+    /* Progress indicator */
     .form-progress {
       display: flex;
       gap: 0.5rem;
-      margin-bottom: 0.75rem;
-      width: 100%;
-      max-width: 520px;
-      padding: 0 1rem;
+      margin-bottom: 1rem;
     }
 
     .progress-step {
       flex: 1;
       height: 0.25rem;
-      background: #e5e7eb;
+      background: #e2e8f0;
       border-radius: 2px;
       transition: background 0.3s ease;
     }
 
     .progress-step.active {
-      background: var(--chatgpt-blue);
+      background: var(--primary-blue);
     }
 
-    /* Form Steps */
+    /* Card */
+    .signup-card {
+      background: white;
+      border-radius: 0.75rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      padding: 2.5rem 2rem;
+    }
+
     .form-step {
       display: none;
-      animation: fadeIn 0.4s ease-out;
     }
 
     .form-step.active {
       display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .form-header {
@@ -126,30 +95,23 @@
       font-size: 1.5rem;
       font-weight: 700;
       margin: 0 0 0.5rem 0;
-      color: var(--text-light);
       letter-spacing: -0.02em;
     }
 
     .form-subtitle {
-      font-size: 0.9375rem;
       color: var(--text-muted);
       margin: 0;
     }
 
-    .form-content {
-      margin-bottom: 1.5rem;
-    }
-
-    /* Input Groups */
+    /* Form groups */
     .form-group {
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.25rem;
     }
 
     .form-label {
       display: block;
       font-size: 0.875rem;
       font-weight: 600;
-      color: var(--text-light);
       margin-bottom: 0.5rem;
     }
 
@@ -157,22 +119,23 @@
       width: 100%;
       height: 48px;
       padding: 0 1rem;
-      border: 1px solid #d1d5db;
-      border-radius: 0.5rem;
+      border: none;
+      border-radius: 0.75rem;
       font-size: 0.9375rem;
       font-family: inherit;
-      transition: all 0.2s ease;
       background: white;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      transition: all 0.2s ease;
     }
 
     .form-input:focus {
       outline: none;
-      border-color: var(--chatgpt-blue);
-      box-shadow: 0 0 0 3px rgba(10, 124, 255, 0.1);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+      transform: translateY(-1px);
     }
 
-    .form-input.error {
-      border-color: #ef4444;
+    .form-input::placeholder {
+      color: #cbd5e1;
     }
 
     .error-message {
@@ -186,7 +149,7 @@
       display: block;
     }
 
-    /* Plan Selection */
+    /* Plan selection */
     .plan-options {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -196,21 +159,23 @@
 
     .plan-card {
       padding: 1.5rem;
-      border: 2px solid #e5e7eb;
+      border: none;
       border-radius: 0.75rem;
+      background: white;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
       cursor: pointer;
       transition: all 0.2s ease;
       position: relative;
     }
 
     .plan-card:hover {
-      border-color: var(--chatgpt-blue);
-      background: rgba(10, 124, 255, 0.02);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+      transform: translateY(-2px);
     }
 
     .plan-card.selected {
-      border-color: var(--chatgpt-blue);
-      background: rgba(10, 124, 255, 0.04);
+      box-shadow: 0 0 0 2px var(--primary-blue);
+      transform: translateY(-2px);
     }
 
     .plan-card input[type="radio"] {
@@ -218,29 +183,20 @@
       opacity: 0;
     }
 
-    .plan-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 0.5rem;
-    }
-
     .plan-name {
-      font-size: 1.25rem;
+      font-size: 1.125rem;
       font-weight: 600;
-      color: var(--text-light);
-      line-height: 1.2;
+      margin-bottom: 0.5rem;
     }
 
     .plan-price {
       font-size: 1.5rem;
-      font-weight: 600;
-      color: var(--text-light);
-      margin-bottom: 0.75rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
     }
 
     .plan-price-period {
-      font-size: 0.9375rem;
+      font-size: 0.875rem;
       color: var(--text-muted);
       font-weight: 400;
     }
@@ -248,116 +204,100 @@
     .plan-trial {
       font-size: 0.875rem;
       color: var(--text-muted);
-      margin-bottom: 0;
     }
 
     /* Buttons */
     .form-buttons {
       display: flex;
       gap: 0.75rem;
-      margin-bottom: 0;
+      margin-bottom: 1rem;
     }
 
     .btn-back {
-      flex: 0 0 auto;
       padding: 0 1.5rem;
       height: 48px;
-      background: #f3f4f6;
-      color: var(--text-light);
+      background: #e2e8f0;
+      color: var(--text-dark);
       border: none;
-      border-radius: 0.5rem;
+      border-radius: 1rem;
       font-size: 0.9375rem;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.2s ease;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     }
 
     .btn-back:hover {
-      background: #e5e7eb;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+      transform: translateY(-1px);
     }
 
     .submit-button {
       flex: 1;
       height: 48px;
-      background: var(--chatgpt-blue);
+      background: #333;
       color: white;
       border: none;
-      border-radius: 0.5rem;
+      border-radius: 1rem;
       font-size: 0.9375rem;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.2s ease;
-      box-shadow: 0 2px 8px rgba(10, 124, 255, 0.2);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     }
 
-    /* Full width button for step 1 */
     .form-step[data-step="1"] .submit-button {
       width: 100%;
     }
 
     .submit-button:hover:not(:disabled) {
-      background: #0969e6;
-      box-shadow: 0 4px 12px rgba(10, 124, 255, 0.3);
+      background: #1a1a1a;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+      transform: translateY(-1px);
     }
 
     .submit-button:disabled {
       background: #cbd5e0;
       cursor: not-allowed;
-      box-shadow: none;
     }
 
-    /* Loading Spinner */
+    /* Loading */
     .loading-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+      text-align: center;
       padding: 3rem 0;
     }
 
     .loading-dots {
       display: flex;
       gap: 0.5rem;
+      justify-content: center;
       margin-bottom: 1rem;
     }
 
     .loading-dot {
       width: 0.75rem;
       height: 0.75rem;
-      background: var(--chatgpt-blue);
+      background: var(--primary-blue);
       border-radius: 50%;
       animation: bounce 1.4s infinite ease-in-out both;
     }
 
-    .loading-dot:nth-child(1) {
-      animation-delay: -0.32s;
-    }
-
-    .loading-dot:nth-child(2) {
-      animation-delay: -0.16s;
-    }
+    .loading-dot:nth-child(1) { animation-delay: -0.32s; }
+    .loading-dot:nth-child(2) { animation-delay: -0.16s; }
 
     @keyframes bounce {
-      0%, 80%, 100% {
-        transform: scale(0);
-      }
-      40% {
-        transform: scale(1);
-      }
+      0%, 80%, 100% { transform: scale(0); }
+      40% { transform: scale(1); }
     }
 
     .loading-text {
-      font-size: 0.9375rem;
       color: var(--text-muted);
     }
 
-    /* Footer Text */
+    /* Footer */
     .form-footer {
       text-align: center;
+      margin-top: 1.5rem;
     }
 
     .form-footer-text {
@@ -367,7 +307,7 @@
     }
 
     .form-footer-link {
-      color: var(--chatgpt-blue);
+      color: var(--primary-blue);
       text-decoration: none;
       font-weight: 500;
     }
@@ -386,23 +326,17 @@
     }
 
     .skip-link:hover {
-      text-decoration: underline;
-      color: var(--text-light);
+      color: var(--text-dark);
     }
 
-    /* Mobile Responsive */
+    /* Mobile */
     @media (max-width: 768px) {
       body {
         padding: 1.5rem 1rem;
       }
 
-      .site-logo {
-        font-size: 1.25rem;
-      }
-
       .signup-card {
         padding: 2rem 1.5rem;
-        margin-top: 2rem;
       }
 
       .form-title {
@@ -417,10 +351,8 @@
 </head>
 <body>
   <div class="signup-container">
-    <!-- Logo at top -->
     <a href="/" class="site-logo">StudioSix</a>
 
-    <!-- Progress Bar (outside card) -->
     <div class="form-progress">
       <div class="progress-step active" data-step="1"></div>
       <div class="progress-step" data-step="2"></div>
@@ -428,16 +360,14 @@
     </div>
 
     <div class="signup-card">
+      <!-- Step 1: Account Info -->
+      <div class="form-step active" data-step="1">
+        <div class="form-header">
+          <h1 class="form-title">Create account</h1>
+          <p class="form-subtitle">Start generating professional photos</p>
+        </div>
 
-    <!-- Step 1: Name & Email -->
-    <div class="form-step active" data-step="1">
-      <div class="form-header">
-        <h1 class="form-title">Create your account</h1>
-        <p class="form-subtitle">Get started with StudioSix</p>
-      </div>
-
-      <form id="step1-form">
-        <div class="form-content">
+        <form id="step1-form">
           <div class="form-group">
             <label for="name" class="form-label">Name</label>
             <input
@@ -447,7 +377,6 @@
               placeholder="Your name"
               autocomplete="name"
             />
-            <div class="error-message" id="name-error">Please enter your name</div>
           </div>
 
           <div class="form-group">
@@ -460,7 +389,7 @@
               required
               autocomplete="email"
             />
-            <div class="error-message" id="email-error">Please enter a valid email</div>
+            <div class="error-message" id="email-error">Enter a valid email</div>
           </div>
 
           <div class="form-group">
@@ -469,80 +398,70 @@
               type="password"
               id="password"
               class="form-input"
-              placeholder="At least 8 characters"
+              placeholder="Min 8 characters"
               required
               autocomplete="new-password"
               minlength="8"
             />
-            <div class="error-message" id="password-error">Password must be at least 8 characters</div>
+            <div class="error-message" id="password-error">Min 8 characters</div>
           </div>
 
           <button type="submit" class="submit-button">Continue</button>
-        </div>
+        </form>
 
         <div class="form-footer">
           <p class="form-footer-text">
-            Already have an account?
-            <a href="/login" class="form-footer-link">Log in</a>
+            Have an account? <a href="/login" class="form-footer-link">Log in</a>
           </p>
         </div>
-      </form>
-    </div>
-
-    <!-- Step 2: Plan Selection -->
-    <div class="form-step" data-step="2">
-      <div class="form-header">
-        <h1 class="form-title">Choose your plan</h1>
-        <p class="form-subtitle">Start with a 7-day free trial</p>
       </div>
 
-      <form id="step2-form">
-        <div class="form-content">
+      <!-- Step 2: Plan Selection -->
+      <div class="form-step" data-step="2">
+        <div class="form-header">
+          <h1 class="form-title">Choose your plan</h1>
+          <p class="form-subtitle">7-day free trial included</p>
+        </div>
+
+        <form id="step2-form">
           <div class="plan-options">
-            <!-- Starter Plan -->
             <label class="plan-card" for="plan-starter">
               <input type="radio" name="plan" id="plan-starter" value="starter" />
-              <div class="plan-header">
-                <div class="plan-name">Starter</div>
-              </div>
-              <div class="plan-price">$6<span class="plan-price-period">/month</span></div>
-              <div class="plan-trial">120 images per month</div>
+              <div class="plan-name">Starter</div>
+              <div class="plan-price">$6<span class="plan-price-period">/mo</span></div>
+              <div class="plan-trial">120 images</div>
             </label>
 
-            <!-- Creator Plan -->
             <label class="plan-card" for="plan-creator">
               <input type="radio" name="plan" id="plan-creator" value="creator" />
-              <div class="plan-header">
-                <div class="plan-name">Creator</div>
-              </div>
-              <div class="plan-price">$11<span class="plan-price-period">/month</span></div>
-              <div class="plan-trial">400 images per month</div>
+              <div class="plan-name">Creator</div>
+              <div class="plan-price">$11<span class="plan-price-period">/mo</span></div>
+              <div class="plan-trial">400 images</div>
             </label>
           </div>
 
           <div class="form-buttons">
             <button type="button" class="btn-back" id="back-to-step1">Back</button>
-            <button type="submit" class="submit-button">Start 7-day free trial</button>
+            <button type="submit" class="submit-button">Start trial</button>
           </div>
-        </div>
+        </form>
 
-        <a class="skip-link" id="skip-to-free">Continue with free account</a>
-      </form>
-    </div>
+        <a class="skip-link" id="skip-to-free">Continue with free</a>
+      </div>
 
-    <!-- Step 3: Loading -->
-    <div class="form-step" data-step="3">
-      <div class="loading-container">
-        <div class="loading-dots">
-          <div class="loading-dot"></div>
-          <div class="loading-dot"></div>
-          <div class="loading-dot"></div>
+      <!-- Step 3: Loading -->
+      <div class="form-step" data-step="3">
+        <div class="loading-container">
+          <div class="loading-dots">
+            <div class="loading-dot"></div>
+            <div class="loading-dot"></div>
+            <div class="loading-dot"></div>
+          </div>
+          <div class="loading-text">Creating your account</div>
         </div>
-        <div class="loading-text">Please wait while we create your account</div>
       </div>
     </div>
   </div>
-</div>
 
   <script>
     const urlParams = new URLSearchParams(window.location.search);
@@ -556,7 +475,6 @@
       plan: preselectedPlan || null
     };
 
-    // Preselect plan if coming from pricing page
     if (preselectedPlan) {
       const planInput = document.getElementById(`plan-${preselectedPlan}`);
       if (planInput) {
@@ -565,7 +483,6 @@
       }
     }
 
-    // Plan card selection
     document.querySelectorAll('.plan-card').forEach(card => {
       card.addEventListener('click', function() {
         const radio = this.querySelector('input[type="radio"]');
@@ -579,35 +496,28 @@
       selectedCard.classList.add('selected');
     }
 
-    // Step navigation
     function goToStep(step) {
       document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
       document.querySelectorAll('.progress-step').forEach(s => s.classList.remove('active'));
-      
+
       document.querySelector(`.form-step[data-step="${step}"]`).classList.add('active');
       for (let i = 1; i <= step; i++) {
         document.querySelector(`.progress-step[data-step="${i}"]`).classList.add('active');
       }
     }
 
-    // Email validation
     function validateEmail(email) {
       return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     }
 
-    function showError(fieldId, message) {
-      const errorEl = document.getElementById(`${fieldId}-error`);
-      if (message) errorEl.textContent = message;
-      errorEl.classList.add('show');
-      document.getElementById(fieldId).classList.add('error');
+    function showError(fieldId) {
+      document.getElementById(`${fieldId}-error`).classList.add('show');
     }
 
     function hideError(fieldId) {
       document.getElementById(`${fieldId}-error`).classList.remove('show');
-      document.getElementById(fieldId).classList.remove('error');
     }
 
-    // Step 1: Name, Email & Password
     document.getElementById('step1-form').addEventListener('submit', function(e) {
       e.preventDefault();
 
@@ -617,7 +527,6 @@
 
       let isValid = true;
 
-      // Name is optional, but if provided, store it
       formData.name = name;
 
       if (!email || !validateEmail(email)) {
@@ -641,19 +550,17 @@
       }
     });
 
-    // Back to step 1
     document.getElementById('back-to-step1').addEventListener('click', function() {
       goToStep(1);
     });
 
-    // Step 2: Plan Selection
     document.getElementById('step2-form').addEventListener('submit', async function(e) {
       e.preventDefault();
 
       const selectedPlan = document.querySelector('input[name="plan"]:checked');
 
       if (!selectedPlan) {
-        alert('Please select a plan');
+        alert('Select a plan');
         return;
       }
 
@@ -663,7 +570,6 @@
       await createAccount(preselectedBilling);
     });
 
-    // Skip to free account
     document.getElementById('skip-to-free').addEventListener('click', async function(e) {
       e.preventDefault();
       formData.plan = 'free';
@@ -672,7 +578,6 @@
       await createAccount('free');
     });
 
-    // Create account function
     async function createAccount(billing) {
       try {
         const response = await fetch('/api/signup', {
@@ -688,9 +593,9 @@
             billing: billing
           })
         });
-        
+
         const data = await response.json();
-        
+
         if (data.success) {
           if (data.checkout_url) {
             window.location.href = data.checkout_url;
@@ -698,19 +603,18 @@
             window.location.href = data.redirect;
           }
         } else {
-          alert(data.error || 'Something went wrong. Please try again.');
+          alert(data.error || 'Something went wrong');
           goToStep(1);
           if (data.error && data.error.toLowerCase().includes('email')) {
-            showError('email', data.error);
+            showError('email');
           }
         }
       } catch (error) {
-        alert('Connection error. Please try again.');
+        alert('Connection error');
         goToStep(1);
       }
     }
 
-    // Hide errors on input
     ['name', 'email', 'password'].forEach(fieldId => {
       document.getElementById(fieldId).addEventListener('input', function() {
         hideError(fieldId);
