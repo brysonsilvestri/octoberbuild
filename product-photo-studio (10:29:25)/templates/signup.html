@@ -510,11 +510,9 @@
 
           <div class="form-buttons">
             <button type="button" class="btn-back" id="back-to-step1">Back</button>
-            <button type="submit" class="submit-button">7 day free trial</button>
+            <button type="submit" class="submit-button">Start 7-day free trial</button>
           </div>
         </div>
-
-        <a class="skip-link" id="skip-to-free">Continue with free account</a>
       </form>
     </div>
 
@@ -632,27 +630,18 @@
     // Step 2: Plan Selection
     document.getElementById('step2-form').addEventListener('submit', async function(e) {
       e.preventDefault();
-      
+
       const selectedPlan = document.querySelector('input[name="plan"]:checked');
-      
+
       if (!selectedPlan) {
         alert('Please select a plan');
         return;
       }
-      
+
       formData.plan = selectedPlan.value;
-      
+
       goToStep(3);
       await createAccount(preselectedBilling);
-    });
-
-    // Skip to free account
-    document.getElementById('skip-to-free').addEventListener('click', async function(e) {
-      e.preventDefault();
-      formData.plan = 'free';
-      
-      goToStep(3);
-      await createAccount('free');
     });
 
     // Create account function
