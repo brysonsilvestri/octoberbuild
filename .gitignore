@@ -50,5 +50,8 @@ Thumbs.db
 *.log
 
 # Static uploads/outputs (generated at runtime)
-static/uploads/
-static/outputs/
+# Keep the folders but ignore their contents
+static/uploads/*
+!static/uploads/.gitkeep
+static/outputs/*
+!static/outputs/.gitkeep
