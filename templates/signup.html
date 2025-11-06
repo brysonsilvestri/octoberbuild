@@ -43,7 +43,7 @@
 
     .signup-container {
       width: 100%;
-      max-width: 420px;
+      max-width: 560px;
     }
 
     /* Progress bar */
@@ -51,7 +51,7 @@
       display: flex;
       gap: 0.5rem;
       margin-bottom: 1rem;
-      max-width: 380px;
+      max-width: 520px;
       margin-left: auto;
       margin-right: auto;
     }
@@ -72,7 +72,7 @@
       background: white;
       border-radius: 0.75rem;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-      padding: 2.5rem 2rem;
+      padding: 2rem 2.5rem;
     }
 
     .form-step {
@@ -90,24 +90,25 @@
     }
 
     .form-header {
-      margin-bottom: 2rem;
+      margin-bottom: 1.5rem;
       text-align: center;
     }
 
     .form-title {
       font-size: 1.5rem;
       font-weight: 700;
-      margin: 0 0 0.5rem 0;
+      margin: 0 0 0.375rem 0;
       letter-spacing: -0.02em;
     }
 
     .form-subtitle {
+      font-size: 0.9375rem;
       color: var(--text-muted);
       margin: 0;
     }
 
     .form-group {
-      margin-bottom: 1.25rem;
+      margin-bottom: 1rem;
     }
 
     .form-label {
@@ -115,6 +116,7 @@
       font-size: 0.875rem;
       font-weight: 600;
       margin-bottom: 0.5rem;
+      color: var(--text-dark);
     }
 
     .form-input {
@@ -156,11 +158,11 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 1rem;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.25rem;
     }
 
     .plan-card {
-      padding: 1.5rem;
+      padding: 1.25rem 1rem;
       border: none;
       border-radius: 0.75rem;
       background: white;
@@ -168,6 +170,7 @@
       cursor: pointer;
       transition: all 0.2s ease;
       position: relative;
+      text-align: center;
     }
 
     .plan-card:hover {
@@ -189,12 +192,14 @@
       font-size: 1.125rem;
       font-weight: 600;
       margin-bottom: 0.5rem;
+      color: var(--text-dark);
     }
 
     .plan-price {
-      font-size: 1.5rem;
+      font-size: 1.75rem;
       font-weight: 700;
       margin-bottom: 0.25rem;
+      color: var(--text-dark);
     }
 
     .plan-price-period {
@@ -266,7 +271,7 @@
     /* Loading */
     .loading-container {
       text-align: center;
-      padding: 3rem 0;
+      padding: 2.5rem 0;
     }
 
     .loading-dots {
@@ -294,15 +299,16 @@
 
     .loading-text {
       color: var(--text-muted);
+      font-size: 0.9375rem;
     }
 
     .form-footer {
       text-align: center;
-      margin-top: 1.5rem;
+      margin-top: 1.25rem;
     }
 
     .form-footer-text {
-      font-size: 0.9375rem;
+      font-size: 0.875rem;
       color: var(--text-muted);
       margin: 0;
     }
@@ -321,9 +327,9 @@
       display: block;
       text-align: center;
       color: var(--text-muted);
-      font-size: 0.9375rem;
+      font-size: 0.875rem;
       text-decoration: none;
-      margin-top: 1rem;
+      margin-top: 0.75rem;
     }
 
     .skip-link:hover {
@@ -341,12 +347,16 @@
         font-size: 1.25rem;
       }
 
+      .signup-container {
+        max-width: 440px;
+      }
+
       .signup-card {
-        padding: 2rem 1.5rem;
+        padding: 1.75rem 1.5rem;
       }
 
       .form-title {
-        font-size: 1.25rem;
+        font-size: 1.375rem;
       }
 
       .plan-options {
@@ -369,13 +379,13 @@
       <!-- Step 1: Email & Password -->
       <div class="form-step active" data-step="1">
         <div class="form-header">
-          <h1 class="form-title">Create account</h1>
-          <p class="form-subtitle">Start generating professional photos</p>
+          <h1 class="form-title">Create your account</h1>
+          <p class="form-subtitle">Get started with professional product photos</p>
         </div>
 
         <form id="step1-form">
           <div class="form-group">
-            <label for="email" class="form-label">Email</label>
+            <label for="email" class="form-label">Email address</label>
             <input
               type="email"
               id="email"
@@ -384,7 +394,7 @@
               required
               autocomplete="email"
             />
-            <div class="error-message" id="email-error">Enter a valid email</div>
+            <div class="error-message" id="email-error">Please enter a valid email</div>
           </div>
 
           <div class="form-group">
@@ -393,12 +403,12 @@
               type="password"
               id="password"
               class="form-input"
-              placeholder="Min 8 characters"
+              placeholder="Minimum 8 characters"
               required
               autocomplete="new-password"
               minlength="8"
             />
-            <div class="error-message" id="password-error">Min 8 characters</div>
+            <div class="error-message" id="password-error">Password must be at least 8 characters</div>
           </div>
 
           <button type="submit" class="submit-button">Continue</button>
@@ -406,7 +416,7 @@
 
         <div class="form-footer">
           <p class="form-footer-text">
-            Have an account? <a href="/login" class="form-footer-link">Log in</a>
+            Already have an account? <a href="/login" class="form-footer-link">Sign in</a>
           </p>
         </div>
       </div>
@@ -414,8 +424,8 @@
       <!-- Step 2: Plan Selection -->
       <div class="form-step" data-step="2">
         <div class="form-header">
-          <h1 class="form-title">Choose your plan</h1>
-          <p class="form-subtitle">7-day free trial included</p>
+          <h1 class="form-title">Select your plan</h1>
+          <p class="form-subtitle">Start with a 7-day free trial</p>
         </div>
 
         <form id="step2-form">
@@ -424,24 +434,24 @@
               <input type="radio" name="plan" id="plan-starter" value="starter" />
               <div class="plan-name">Starter</div>
               <div class="plan-price">$6<span class="plan-price-period">/mo</span></div>
-              <div class="plan-trial">120 images</div>
+              <div class="plan-trial">120 images/month</div>
             </label>
 
             <label class="plan-card" for="plan-creator">
               <input type="radio" name="plan" id="plan-creator" value="creator" />
               <div class="plan-name">Creator</div>
               <div class="plan-price">$11<span class="plan-price-period">/mo</span></div>
-              <div class="plan-trial">400 images</div>
+              <div class="plan-trial">400 images/month</div>
             </label>
           </div>
 
           <div class="form-buttons">
             <button type="button" class="btn-back" id="back-to-step1">Back</button>
-            <button type="submit" class="submit-button">Start trial</button>
+            <button type="submit" class="submit-button">Start free trial</button>
           </div>
         </form>
 
-        <a class="skip-link" id="skip-to-free">Continue with free</a>
+        <a class="skip-link" id="skip-to-free">Continue with free account</a>
       </div>
 
       <!-- Step 3: Loading -->
@@ -452,7 +462,7 @@
             <div class="loading-dot"></div>
             <div class="loading-dot"></div>
           </div>
-          <div class="loading-text">Creating your account</div>
+          <div class="loading-text">Setting up your account...</div>
         </div>
       </div>
     </div>
@@ -551,7 +561,7 @@
       const selectedPlan = document.querySelector('input[name="plan"]:checked');
 
       if (!selectedPlan) {
-        alert('Select a plan');
+        alert('Please select a plan');
         return;
       }
 
@@ -593,14 +603,14 @@
             window.location.href = data.redirect;
           }
         } else {
-          alert(data.error || 'Something went wrong');
+          alert(data.error || 'Something went wrong. Please try again.');
           goToStep(1);
           if (data.error && data.error.toLowerCase().includes('email')) {
             showError('email');
           }
         }
       } catch (error) {
-        alert('Connection error');
+        alert('Connection error. Please check your internet and try again.');
         goToStep(1);
       }
     }
