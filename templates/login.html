@@ -35,14 +35,15 @@
     }
 
     .site-logo {
+      position: fixed;
+      top: 2rem;
+      left: 2rem;
       font-size: 1.5rem;
       font-weight: 600;
       color: #333;
       letter-spacing: -0.02em;
       text-decoration: none;
-      display: block;
-      text-align: center;
-      margin-bottom: 2rem;
+      z-index: 10;
     }
 
     .login-card {
@@ -139,7 +140,7 @@
     .submit-button {
       width: 100%;
       height: 48px;
-      background: #333;
+      background: var(--primary-blue);
       color: white;
       border: none;
       border-radius: 1rem;
@@ -151,8 +152,8 @@
     }
 
     .submit-button:hover {
-      background: #1a1a1a;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+      background: #0969e6;
+      box-shadow: 0 4px 12px rgba(10, 124, 255, 0.3);
       transform: translateY(-1px);
     }
 
