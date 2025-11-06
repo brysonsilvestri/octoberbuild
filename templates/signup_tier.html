@@ -41,91 +41,103 @@
       z-index: 10;
     }
 
+    .signup-container {
+      width: 100%;
+      max-width: 560px;
+    }
+
     .signup-card {
       background: white;
       border-radius: 0.75rem;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-      max-width: 640px;
-      width: 100%;
-      display: grid;
-      grid-template-columns: 200px 1fr;
-      overflow: hidden;
+      padding: 2rem 2.5rem;
     }
 
-    /* Left side - Plan info */
-    .plan-summary {
+    .form-header {
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    .form-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin: 0 0 0.375rem 0;
+      letter-spacing: -0.02em;
+    }
+
+    .form-subtitle {
+      font-size: 0.9375rem;
+      color: var(--text-muted);
+      margin: 0;
+    }
+
+    /* Selected plan info */
+    .plan-info {
       background: var(--bg-light);
-      padding: 2rem 1.5rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
+      border-radius: 0.75rem;
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    .plan-badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      background: white;
+      border-radius: 1rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--primary-blue);
+      margin-bottom: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
     .plan-name {
       font-size: 1.25rem;
       font-weight: 700;
-      margin: 0;
+      margin: 0 0 0.5rem 0;
       color: var(--text-dark);
-    }
-
-    .plan-trial {
-      font-size: 0.875rem;
-      color: var(--text-muted);
-      margin: 0;
     }
 
     .plan-price {
-      font-size: 1.5rem;
+      font-size: 1.75rem;
       font-weight: 700;
-      margin: 0.75rem 0;
+      margin: 0 0 0.75rem 0;
       color: var(--text-dark);
+    }
+
+    .plan-price-period {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      font-weight: 500;
     }
 
     .plan-features {
       list-style: none;
       padding: 0;
-      margin: 0.75rem 0 0 0;
+      margin: 0;
       font-size: 0.875rem;
-      color: var(--text-dark);
+      display: flex;
+      flex-direction: column;
+      gap: 0.375rem;
     }
 
     .plan-features li {
-      padding: 0.375rem 0;
+      color: var(--text-dark);
       display: flex;
-      align-items: flex-start;
+      align-items: center;
+      justify-content: center;
       gap: 0.5rem;
-      line-height: 1.4;
     }
 
     .plan-features li::before {
       content: '✓';
       font-weight: 700;
       color: var(--primary-blue);
-      flex-shrink: 0;
     }
 
-    /* Right side - Form */
-    .form-section {
-      padding: 2rem 1.75rem;
-    }
-
-    .form-header {
-      margin-bottom: 1.5rem;
-    }
-
-    .form-title {
-      font-size: 1.25rem;
-      font-weight: 700;
-      margin: 0 0 0.5rem 0;
-      letter-spacing: -0.02em;
-    }
-
-    .form-subtitle {
-      font-size: 0.875rem;
-      color: var(--text-muted);
-      margin: 0;
-    }
-
+    /* Form */
     .error-message {
       padding: 0.75rem 1rem;
       background: #fef2f2;
@@ -149,6 +161,7 @@
       font-size: 0.875rem;
       font-weight: 600;
       margin-bottom: 0.5rem;
+      color: var(--text-dark);
     }
 
     .form-input {
@@ -190,7 +203,7 @@
       align-items: center;
       justify-content: center;
       gap: 0.5rem;
-      margin-top: 0.5rem;
+      margin-top: 0.25rem;
     }
 
     .submit-button:hover:not(:disabled) {
@@ -230,6 +243,27 @@
       to { transform: rotate(360deg); }
     }
 
+    .form-footer {
+      text-align: center;
+      margin-top: 1.25rem;
+    }
+
+    .form-footer-text {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      margin: 0;
+    }
+
+    .form-footer-link {
+      color: var(--primary-blue);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .form-footer-link:hover {
+      text-decoration: underline;
+    }
+
     /* Mobile */
     @media (max-width: 768px) {
       body {
@@ -242,17 +276,16 @@
         font-size: 1.25rem;
       }
 
+      .signup-container {
+        max-width: 440px;
+      }
+
       .signup-card {
-        grid-template-columns: 1fr;
-        max-width: 420px;
+        padding: 1.75rem 1.5rem;
       }
 
-      .plan-summary {
-        padding: 1.5rem;
-      }
-
-      .form-section {
-        padding: 1.5rem;
+      .form-title {
+        font-size: 1.375rem;
       }
     }
   </style>
@@ -260,52 +293,50 @@
 <body>
   <a href="/" class="site-logo">StudioSix</a>
 
-  <div class="signup-card">
-    <!-- Left: Plan info -->
-    <div class="plan-summary">
-      {% if plan == 'starter' %}
-        <h2 class="plan-name">Starter</h2>
-        <p class="plan-trial">7-day free trial</p>
-        <div class="plan-price">
-          {% if billing == 'annual' %}$5{% else %}$6{% endif %}<span style="font-size: 0.875rem; font-weight: 500; color: var(--text-muted);"> per month</span>
-        </div>
-        <ul class="plan-features">
-          <li>120 photos/month</li>
-          <li>Studio lighting</li>
-          <li>Priority support</li>
-        </ul>
-
-      {% elif plan == 'creator' %}
-        <h2 class="plan-name">Creator</h2>
-        <p class="plan-trial">7-day free trial</p>
-        <div class="plan-price">
-          {% if billing == 'annual' %}$18{% else %}$11{% endif %}<span style="font-size: 0.875rem; font-weight: 500; color: var(--text-muted);"> per month</span>
-        </div>
-        <ul class="plan-features">
-          <li>400 photos/month</li>
-          <li>Studio lighting</li>
-          <li>Priority support</li>
-        </ul>
-
-      {% elif plan == 'enterprise' %}
-        <h2 class="plan-name">Enterprise</h2>
-        <p class="plan-trial">7-day free trial</p>
-        <div class="plan-price">
-          {% if billing == 'annual' %}$83{% else %}$99{% endif %}<span style="font-size: 0.875rem; font-weight: 500; color: var(--text-muted);"> per month</span>
-        </div>
-        <ul class="plan-features">
-          <li>1,600 photos/month</li>
-          <li>Studio lighting</li>
-          <li>Priority support</li>
-        </ul>
-      {% endif %}
-    </div>
-
-    <!-- Right: Form -->
-    <div class="form-section">
+  <div class="signup-container">
+    <div class="signup-card">
       <div class="form-header">
-        <h1 class="form-title">Create account</h1>
-        <p class="form-subtitle">Start your free trial</p>
+        <h1 class="form-title">Complete your signup</h1>
+        <p class="form-subtitle">Create your account to start your free trial</p>
+      </div>
+
+      <!-- Plan info -->
+      <div class="plan-info">
+        <div class="plan-badge">7-Day Free Trial</div>
+
+        {% if plan == 'starter' %}
+          <div class="plan-name">Starter Plan</div>
+          <div class="plan-price">
+            {% if billing == 'annual' %}$5{% else %}$6{% endif %}<span class="plan-price-period"> per month</span>
+          </div>
+          <ul class="plan-features">
+            <li>120 images per month</li>
+            <li>Studio-quality lighting</li>
+            <li>Priority support</li>
+          </ul>
+
+        {% elif plan == 'creator' %}
+          <div class="plan-name">Creator Plan</div>
+          <div class="plan-price">
+            {% if billing == 'annual' %}$18{% else %}$11{% endif %}<span class="plan-price-period"> per month</span>
+          </div>
+          <ul class="plan-features">
+            <li>400 images per month</li>
+            <li>Studio-quality lighting</li>
+            <li>Priority support</li>
+          </ul>
+
+        {% elif plan == 'enterprise' %}
+          <div class="plan-name">Enterprise Plan</div>
+          <div class="plan-price">
+            {% if billing == 'annual' %}$83{% else %}$99{% endif %}<span class="plan-price-period"> per month</span>
+          </div>
+          <ul class="plan-features">
+            <li>1,600 images per month</li>
+            <li>Studio-quality lighting</li>
+            <li>Priority support</li>
+          </ul>
+        {% endif %}
       </div>
 
       <div id="errorMessage" class="error-message"></div>
@@ -315,7 +346,7 @@
         <input type="hidden" id="billing" value="{{ billing }}">
 
         <div class="form-group">
-          <label for="email" class="form-label">Email</label>
+          <label for="email" class="form-label">Email address</label>
           <input
             type="email"
             id="email"
@@ -332,7 +363,7 @@
             type="password"
             id="password"
             class="form-input"
-            placeholder="Min 8 characters"
+            placeholder="Minimum 8 characters"
             required
             autocomplete="new-password"
             minlength="8"
@@ -340,10 +371,16 @@
         </div>
 
         <button type="submit" id="submitBtn" class="submit-button">
-          <span class="button-text">Start 7-day free trial</span>
+          <span class="button-text">Start free trial</span>
           <span class="spinner"></span>
         </button>
       </form>
+
+      <div class="form-footer">
+        <p class="form-footer-text">
+          Already have an account? <a href="/login" class="form-footer-link">Sign in</a>
+        </p>
+      </div>
     </div>
   </div>
 
@@ -369,7 +406,7 @@
 
       if (!email || !email.includes('@')) {
         emailInput.classList.add('error');
-        errorMessage.textContent = 'Enter a valid email';
+        errorMessage.textContent = 'Please enter a valid email address';
         errorMessage.classList.add('show');
         return;
       }
@@ -407,7 +444,7 @@
             window.location.href = data.redirect;
           }
         } else {
-          errorMessage.textContent = data.error || 'Something went wrong';
+          errorMessage.textContent = data.error || 'Something went wrong. Please try again.';
           errorMessage.classList.add('show');
           submitBtn.disabled = false;
           submitBtn.classList.remove('loading');
@@ -417,7 +454,7 @@
           }
         }
       } catch (error) {
-        errorMessage.textContent = 'Connection error';
+        errorMessage.textContent = 'Connection error. Please check your internet and try again.';
         errorMessage.classList.add('show');
         submitBtn.disabled = false;
         submitBtn.classList.remove('loading');
