@@ -29,27 +29,31 @@
       justify-content: center;
     }
 
-    .signup-container {
-      width: 100%;
-      max-width: 480px;
-    }
-
     .site-logo {
+      position: fixed;
+      top: 2rem;
+      left: 2rem;
       font-size: 1.5rem;
       font-weight: 600;
       color: #333;
       letter-spacing: -0.02em;
       text-decoration: none;
-      display: block;
-      text-align: center;
-      margin-bottom: 2rem;
+      z-index: 10;
     }
 
-    /* Progress indicator */
+    .signup-container {
+      width: 100%;
+      max-width: 420px;
+    }
+
+    /* Progress bar */
     .form-progress {
       display: flex;
       gap: 0.5rem;
       margin-bottom: 1rem;
+      max-width: 380px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
     .progress-step {
@@ -64,7 +68,6 @@
       background: var(--primary-blue);
     }
 
-    /* Card */
     .signup-card {
       background: white;
       border-radius: 0.75rem;
@@ -103,7 +106,6 @@
       margin: 0;
     }
 
-    /* Form groups */
     .form-group {
       margin-bottom: 1.25rem;
     }
@@ -235,7 +237,7 @@
     .submit-button {
       flex: 1;
       height: 48px;
-      background: #333;
+      background: var(--primary-blue);
       color: white;
       border: none;
       border-radius: 1rem;
@@ -251,8 +253,8 @@
     }
 
     .submit-button:hover:not(:disabled) {
-      background: #1a1a1a;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+      background: #0969e6;
+      box-shadow: 0 4px 12px rgba(10, 124, 255, 0.3);
       transform: translateY(-1px);
     }
 
@@ -294,7 +296,6 @@
       color: var(--text-muted);
     }
 
-    /* Footer */
     .form-footer {
       text-align: center;
       margin-top: 1.5rem;
@@ -329,10 +330,15 @@
       color: var(--text-dark);
     }
 
-    /* Mobile */
     @media (max-width: 768px) {
       body {
         padding: 1.5rem 1rem;
+      }
+
+      .site-logo {
+        top: 1rem;
+        left: 1rem;
+        font-size: 1.25rem;
       }
 
       .signup-card {
@@ -350,9 +356,9 @@
   </style>
 </head>
 <body>
-  <div class="signup-container">
-    <a href="/" class="site-logo">StudioSix</a>
+  <a href="/" class="site-logo">StudioSix</a>
 
+  <div class="signup-container">
     <div class="form-progress">
       <div class="progress-step active" data-step="1"></div>
       <div class="progress-step" data-step="2"></div>
@@ -360,7 +366,7 @@
     </div>
 
     <div class="signup-card">
-      <!-- Step 1: Account Info -->
+      <!-- Step 1: Email & Password -->
       <div class="form-step active" data-step="1">
         <div class="form-header">
           <h1 class="form-title">Create account</h1>
@@ -368,17 +374,6 @@
         </div>
 
         <form id="step1-form">
-          <div class="form-group">
-            <label for="name" class="form-label">Name</label>
-            <input
-              type="text"
-              id="name"
-              class="form-input"
-              placeholder="Your name"
-              autocomplete="name"
-            />
-          </div>
-
           <div class="form-group">
             <label for="email" class="form-label">Email</label>
             <input
@@ -469,7 +464,6 @@
     const preselectedBilling = urlParams.get('billing') || 'monthly';
 
     const formData = {
-      name: '',
       email: '',
       password: '',
       plan: preselectedPlan || null
@@ -521,13 +515,10 @@
     document.getElementById('step1-form').addEventListener('submit', function(e) {
       e.preventDefault();
 
-      const name = document.getElementById('name').value.trim();
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
 
       let isValid = true;
-
-      formData.name = name;
 
       if (!email || !validateEmail(email)) {
         showError('email');
@@ -586,7 +577,6 @@
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            name: formData.name,
             email: formData.email,
             password: formData.password,
             plan: formData.plan,
@@ -615,7 +605,7 @@
       }
     }
 
-    ['name', 'email', 'password'].forEach(fieldId => {
+    ['email', 'password'].forEach(fieldId => {
       document.getElementById(fieldId).addEventListener('input', function() {
         hideError(fieldId);
       });
